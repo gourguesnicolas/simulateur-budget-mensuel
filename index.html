@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Budget mensuel</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="bw">
+  <h1>
+    <img class="title-icon" src="https://img.icons8.com/?size=100&id=P3p752n6U4Lt&format=png&color=000000" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'">
+    <span>Simulateur de budget mensuel</span>
+  </h1>
+
+  <div class="mg">
+    <div class="mc">
+      <div class="lbl">Salaire mensuel</div>
+      <div class="val editable" id="salary-display" onclick="editSalary(this)" title="Cliquer pour modifier">2 925,00 $</div>
+    </div>
+    <div class="mc"><div class="lbl">Total dépenses</div><div class="val" id="tot">—</div></div>
+    <div class="mc"><div class="lbl">Solde restant</div><div class="val" id="solde">—</div></div>
+  </div>
+
+  <div class="ratio-wrap">
+    <div class="ratio-head">
+      <span>Loyer en % du salaire</span><span class="editable" id="rlbl" onclick="editLoyerRatio(this)" title="Cliquer pour modifier le pourcentage">—</span>
+    </div>
+    <div class="rbar"><div class="rfill" id="rfill" style="width:0%;"></div></div>
+    <div id="ratio-hint"></div>
+  </div>
+
+  <div class="st">Loyer</div>
+  <div class="loyer-card">
+    <div class="li">
+      <div class="li-left">
+        <div>
+          <div class="editable" id="loyer-name" onclick="startEditText(this)">Loyer mensuel</div>
+          <div class="note" id="loyer-note"></div>
+        </div>
+      </div>
+      <div class="li-right">
+        <span class="editable" id="loyer-amt" onclick="startEditAmt(this,'loyer')">1 615,65 $</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="st">Dépenses récurrentes</div>
+  <div class="card">
+    <div id="fixed-list"></div>
+    <button class="add-btn" onclick="addLine()" title="Ajouter une catégorie">
+      <img class="add-btn-icon" src="https://cdn-icons-png.flaticon.com/512/3524/3524388.png" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'">
+      <span>Ajouter une catégorie</span>
+    </button>
+  </div>
+
+  <div class="st">Épargne &amp; loisirs</div>
+  <div class="card">
+    <div class="srow">
+      <div class="sib"><label>CELI / REER ($/mois)</label><input type="number" id="celi" value="0" min="0" max="9999" step="1"></div>
+      <div class="sib"><label>Loisirs ($/mois)</label><input type="number" id="loisirs" value="0" min="0" max="9999" step="1"></div>
+    </div>
+    <div class="sres">
+      <span class="sres-label">Reste après tout</span>
+      <span id="reste">—</span>
+    </div>
+    <div id="alert-zone"></div>
+  </div>
+
+  <div class="chart-wrap">
+    <canvas id="bc"></canvas>
+  </div>
+  <div id="legend"></div>
+</div>
+
+<div class="save-fab-wrap">
+  <button id="save-fab" class="save-fab" type="button" title="Enregistrer le budget" aria-expanded="false" aria-controls="save-menu">
+    <svg class="save-fab-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path fill="currentColor" d="M12 3a1 1 0 0 1 1 1v8.59l2.3-2.29 1.4 1.41-4.7 4.7-4.7-4.7 1.4-1.41L11 12.59V4a1 1 0 0 1 1-1zM5 18h14v2H5z"/>
+    </svg>
+    <span id="save-fab-label">Enregistrer</span>
+  </button>
+  <div id="save-menu" class="save-menu" role="menu" aria-hidden="true">
+    <button type="button" id="export-excel" class="save-option" role="menuitem">
+      <span>Exporter en fichier Excel</span>
+      <svg class="save-option-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path fill="currentColor" d="M6 2h9l5 5v15H6z" opacity=".15"/>
+        <path fill="currentColor" d="M14 2v6h6" opacity=".35"/>
+        <path fill="currentColor" d="M9 10h2l1.5 2.2L14 10h2l-2.4 3.4L16 17h-2l-1.5-2.2L11 17H9l2.4-3.6z"/>
+      </svg>
+    </button>
+    <button type="button" id="export-pdf" class="save-option" role="menuitem">
+      <span>Exporter au format PDF</span>
+      <svg class="save-option-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path fill="currentColor" d="M6 2h9l5 5v15H6z" opacity=".15"/>
+        <path fill="currentColor" d="M14 2v6h6" opacity=".35"/>
+        <path fill="currentColor" d="M9 10h2.8a2.2 2.2 0 1 1 0 4.4H11V17H9zm2 2v1.4h.7a.7.7 0 1 0 0-1.4zm4-2h-2v7h2a3.5 3.5 0 1 0 0-7m0 2a1.5 1.5 0 1 1 0 3h-.3v-3zm2 5v-7h3v2h-1v1h1v2h-1v2z"/>
+      </svg>
+    </button>
+  </div>
+</div>
+
+<footer class="app-footer">
+  <div class="app-footer-inner">
+    <a class="footer-name" href="https://nicolasgourgues.com/" target="_blank" rel="noopener noreferrer" aria-label="Site web de Nicolas Gourgues">par Nicolas Gourgues</a>
+    <a class="footer-credit" href="https://claude.ai" target="_blank" rel="noopener noreferrer" aria-label="Claude AI">
+      <span>Avec l'aide de Claude AI</span>
+      <img class="footer-logo" src="https://img.icons8.com/?size=100&id=1G3UNEZHMjPH&format=png&color=FFFFFF" alt="Logo Claude AI" loading="lazy" onerror="this.onerror=null;this.src='https://img.icons8.com/?size=100&id=l9ZbAeUVE0l3&format=png&color=FFFFFF';">
+    </a>
+    <a class="footer-credit" href="https://github.com/features/copilot" target="_blank" rel="noopener noreferrer" aria-label="GitHub Copilot">
+      <span>Avec l'aide de GitHub Copilot</span>
+      <img class="footer-logo" src="https://cdn.simpleicons.org/githubcopilot/FFFFFF" alt="Logo GitHub Copilot" loading="lazy">
+    </a>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="functions.js"></script>
+</body>
+</html>
